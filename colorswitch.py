@@ -41,23 +41,15 @@ class BlockView(object):
         pygame.draw.rect(screen,model.color,rect,0)
 
 class BlockController(object):
-    def __init__ (self,model):
-        self.model=model
-
-    # def move(self,distance,event):
-    #     model=self.model
-    #     if event.type==pygame.KEYDOWN:
-    #         if event.key==pygame.K_DOWN:
-    #             self.model.y-=distance
-    #         if event.key==pygame.K_UP:
-    #             self.model.y+=distance
+    def __init__ (self, model):
+        self.model = model
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
-                self.model.dy-=10
+                self.model.dy = 10
             if event.key==pygame.K_UP:
-                self.model.dy+=10
+                self.model.dy = -10
 
 
 if __name__ == "__main__":
@@ -76,7 +68,7 @@ if __name__ == "__main__":
     block = Block(x, y, width, height, BLUE)
     block_view = BlockView(block)
 
-    controller = BlockController(Block)
+    controller = BlockController(block)
 
     running = True
 
