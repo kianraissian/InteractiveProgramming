@@ -24,16 +24,11 @@ class Block:
 
     def step(self):
         self.y += self.dy
+        self.dy = 0
 
 class BlockView(object):
     def __init__(self,model):
         self.model=model
-
-    def render(self,screen):
-        model=self.model
-        rect=(model.x,model.y,model.width,model.height)
-        pygame.draw.rect(screen,model.color,rect,0)
-        pygame.display.update()
 
     def draw(self, surface):
         model = self.model
