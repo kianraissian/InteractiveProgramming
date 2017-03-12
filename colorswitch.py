@@ -14,12 +14,15 @@ class Barrier:
     #     pygame.display.update()
 
 class Block:
-    def __init__(self,x,y,width,height,color):
+    def __init__(self,x,y,dy,width,height,color):
         self.color=color
         self.x=x
         self.y=y
         self.width=width
         self.height=height
+
+    def step(self,dy):
+        self.y+=dy
 
 class BlockView(object):
     def __init__(self,model):
@@ -35,12 +38,13 @@ class BlockController(object):
     def __init__ (self,model):
         self.model=model
 
-    def move(self,distance):
+    def move(self,distance,event):
         model=self.model
-        if event.key==pygame.K_DOWN:
-            self.model.y-=distance
-        if event.key==pygame.K_UP:
-            self.model.y+=distance
+        if event.type==pygame.KEYDOWN:
+            if event.key==pygame.K_DOWN:
+                self.model.y-=distance
+            if event.key==pygame.K_UP:
+                self.model.y+=distance
 
 if __name__ == "__main__":
     pygame.init()
@@ -60,8 +64,6 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type==pygame.KEYDOWN:
-                blockcontroller.move(50)
-                print(y)
+        print(y)
         blockview.render(screen)
     pygame.quit()
