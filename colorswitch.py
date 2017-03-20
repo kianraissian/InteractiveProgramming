@@ -1,17 +1,25 @@
 import pygame
 from pygame.locals import*
 import os,sys
+import random
 
 class Barrier:
     def __init__(self,x,y,width,height,color):
         self.x=x
         self.y=y
+        self.width=width
+        self.height=height
         self.color=color
 
-    # def render(self,screen):
-    #     barrier=(self.x,self.y,self.width,self.height)
-    #     pygame.draw.rect(screen,self.color,barrier,0)
-    #     pygame.display.update()
+class BarrierView(object):
+    def __init__(self,models):
+        self.models=models
+
+    def draw(self):
+        for barrier in self.models:
+            models=self.models
+            thisbarrier=(barrier.x, barrier.y, barrier.width, barrier.height)
+            pygame.draw.rect(screen, barrier.color, thisbarrier, 0)
 
 class Block:
     def __init__(self,x,y,width,height,color):
@@ -30,7 +38,7 @@ class BlockView(object):
     def __init__(self,model):
         self.model=model
 
-    def draw(self, surface):
+    def draw(self):
         model = self.model
         rect=(model.x,model.y,model.width,model.height)
         pygame.draw.rect(screen,model.color,rect,0)
@@ -42,9 +50,16 @@ class BlockController(object):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
-                self.model.dy = 10
+                self.model.dy = 25
             if event.key==pygame.K_UP:
-                self.model.dy = -10
+                self.model.dy = -25
+            if event.key==pygame.K_r:
+                self.model.color = (255,0,0)
+            if event.key==pygame.K_b:
+                self.model.color = (0,0,255)
+            if event.key==pygame.K_g:
+                self.model.color = (0,255,0)
+
 
 
 if __name__ == "__main__":
@@ -52,15 +67,18 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('PyGame App!')
 
-    x = 0
-    y = 0
-    width=200
-    height=200
+    RED=(255,0,0)
     BLACK = (0,0,0)
     BLUE = (0,0,255)
+    GREEN= (0,255,0)
+    colorlist=[RED, BLUE, GREEN]
+    barrierlist=[]
+    for i in range(3):
+        barrier=Barrier(300, 150+150*i, 200, 50, random.choice(colorlist))
+        barrierlist.append(barrier)
+    barrier_view=BarrierView(barrierlist)
 
-
-    block = Block(x, y, width, height, BLUE)
+    block = Block(350, 550, 50, 50, BLUE)
     block_view = BlockView(block)
 
     controller = BlockController(block)
@@ -74,10 +92,14 @@ if __name__ == "__main__":
                 running = False
 
         block.step()
+        for barrier in barrierlist:
+            if (barrier.y+barrier.height)>block.y and block.y>barrier.y:
+                if block.color!=barrier.color:
+                    pygame.quit()
 
         screen.fill(BLACK)
-        block_view.draw(screen)
-
+        block_view.draw()
+        barrier_view.draw()
         pygame.display.update()
 
     pygame.quit()
